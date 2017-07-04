@@ -11,7 +11,7 @@ function Game(props) {
 	}
 	return (
 		<div id="game" className={gameClass} >
-			<Title />
+			<Title onRefreshClick={props.onRefreshClick} />
 			<Board />
 			<Statusbar />
 		</div>

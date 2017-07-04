@@ -17,12 +17,17 @@ class App extends Component {
 		this.setState({phase: "game", player: v});
 	}
 
+	handleRefreshClick(e) {
+		e.preventDefault();
+		this.setState({phase: "setup", player: ""});
+	}
+
 	render(){
 		// 3 game phases: setup, game, result
 		const phase = this.state.phase;
 		return (
 			<div>
-				<Game phase={phase} />
+				<Game phase={phase} onRefreshClick={ (e) => this.handleRefreshClick(e) } />
 				{phase === "setup" && <Setup onClick={ (e) => this.handleSetupClick(e) } />}
 			</div>
 		);
