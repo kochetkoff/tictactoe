@@ -4,8 +4,13 @@ import Statusbar from "./statusbar.js";
 import Board from "./board.js";
 
 function Game(props) {
+	const phase = props.phase;
+	let gameClass = "";
+	if (phase == "setup") {
+		gameClass = "blur";
+	}
 	return (
-		<div id="game" className="">
+		<div id="game" className={gameClass} >
 			<Title />
 			<Board />
 			<Statusbar />
