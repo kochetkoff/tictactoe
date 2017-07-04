@@ -7,7 +7,14 @@ class App extends Component {
 		super(props);
 		this.state = {
 			phase: "setup",
+			player: "x"
 		};
+	}
+
+	handleSetupClick(e) {
+		e.preventDefault();
+		let v = e.target.closest('button').value;
+		this.setState({phase: "game", player: v});
 	}
 
 	render(){
@@ -16,7 +23,7 @@ class App extends Component {
 		return (
 			<div>
 				<Game phase={phase} />
-				{phase === "setup" && <Setup />}
+				{phase === "setup" && <Setup onClick={ (e) => this.handleSetupClick(e) } />}
 			</div>
 		);
 	}
