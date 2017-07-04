@@ -13,7 +13,7 @@ function Game(props) {
 		<div id="game" className={gameClass} >
 			<Title onRefreshClick={props.onRefreshClick} />
 			<Board />
-			<Statusbar />
+			<Statusbar score={props.score} />
 		</div>
 	);
 }

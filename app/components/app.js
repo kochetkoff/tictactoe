@@ -6,8 +6,14 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			// 3 game phases: setup, game, result
 			phase: "setup",
-			player: "x"
+			// which "x" or "o" player plays for
+			player: "",
+			score: {
+				player: 0,
+				computer: 0
+			},
 		};
 	}
 
@@ -23,12 +29,15 @@ class App extends Component {
 	}
 
 	render(){
-		// 3 game phases: setup, game, result
 		const phase = this.state.phase;
 		return (
 			<div>
-				<Game phase={phase} onRefreshClick={ (e) => this.handleRefreshClick(e) } />
-				{phase === "setup" && <Setup onClick={ (e) => this.handleSetupClick(e) } />}
+				<Game phase={phase} 
+					onRefreshClick={(e) => this.handleRefreshClick(e)}
+					score={this.state.score}
+				/>
+
+				{phase === "setup" && <Setup onClick={(e) => this.handleSetupClick(e)} />}
 			</div>
 		);
 	}
