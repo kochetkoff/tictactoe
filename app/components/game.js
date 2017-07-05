@@ -12,7 +12,7 @@ function Game(props) {
 	return (
 		<div id="game" className={gameClass} >
 			<Title onRefreshClick={props.onRefreshClick} />
-			<Board />
+			<Board cells={props.cells} onCellClick={props.onCellClick} />
 			<Statusbar score={props.score} />
 		</div>
 	);
