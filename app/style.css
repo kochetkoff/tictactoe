@@ -80,6 +80,8 @@ td{
   width: 5rem;
   height: 5rem;
   border: none;
+  text-transform: uppercase;
+  font-family: "Segoe UI", Arial, sans-serif;
 }
 td:hover{
   opacity: 0.8;
