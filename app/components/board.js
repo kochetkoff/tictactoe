@@ -7,7 +7,7 @@ class Board extends Component {
 	    return (
 			<Cell
 				value={this.props.cells[i]}
-				onClick={this.props.onCellClick}
+				onClick={() => this.props.onCellClick(i)}
 			/>
 	    );
 	};

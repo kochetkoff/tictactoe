@@ -10,30 +10,121 @@ class App extends Component {
 			phase: "setup",
 			// which "x" or "o" player plays for
 			player: "",
+			computer: "",
 			score: {
 				player: 0,
 				computer: 0
 			},
 			cells: Array(9).fill(null),
+			isPlayerNext: false,
 		};
 	}
 
 	handleSetupClick(e) {
 		e.preventDefault();
-		let v = e.target.closest('button').value;
-		this.setState({phase: "game", player: v});
+		let p = e.target.closest('button').value;
+		let c = p === "x" ? "o" : "x";
+		this.setState({
+			phase: "game",
+			player: p,
+			computer: c,
+			isPlayerNext: p === "x",
+		});
 	}
 
 	handleRefreshClick(e) {
 		e.preventDefault();
-		this.setState({phase: "setup", player: ""});
+		this.setState({
+			phase: "setup",
+			player: "",
+			computer: "",
+			score: {
+				player: 0,
+				computer: 0
+			},
+			cells: Array(9).fill(null),
+			isPlayerNext: false,
+		});
 	}
 
-	handleCellClick(e) {
-		e.preventDefault();
+	handleCellClick(i) {
 		// to do
-		console.log("cell clicked", e.target);
+		const cells = this.state.cells.slice();
+		if (!this.state.isPlayerNext || cells[i]) return;
+		cells[i] = this.state.player;
+		this.setState({
+			cells: cells,
+			isPlayerNext: !this.state.isPlayerNext,
+		});
+	}
 
+	checkIfWin(cells) {
+		const winLines = [
+			[0, 1, 2],
+			[3, 4, 5],
+			[6, 7, 8],
+			[0, 3, 6],
+			[1, 4, 7],
+			[2, 5, 8],
+			[0, 4, 8],
+			[2, 4, 6]
+		];
+		for (let i = 0; i < winLines.length; i++) {
+			const [a, b, c] = winLines[i];
+			if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// check if game can be won in one move
+	// and return winning index
+	checkOneMoveWinInd(cells, sign) {
+		let ind = null;
+		cells.some((cell, i) => {
+			if(cell) return false;
+			let cellsCopy = cells.slice();
+			cellsCopy[i] = sign;
+			if (this.checkIfWin(cellsCopy)) {
+				ind = i;
+				return true;
+			}
+			return false;
+		});
+		return ind;
+	}
+
+	randInd (arr) {
+	    var emptyCells = [];
+	    arr.forEach(function(el, i){
+	        if (el === null) emptyCells.push(i); 
+	    });
+	    return emptyCells[Math.floor(Math.random()*emptyCells.length)];
+	}
+
+	showMessage(msg) {
+		alert(msg);
+	}
+
+	computerMove() {
+		//to do
+		let cells = this.state.cells.slice();
+		const c = this.state.computer;
+		const p = this.state.player;
+		let tick = null;
+		tick = this.checkOneMoveWinInd(cells, c);
+		if (tick === null) {
+			tick = this.checkOneMoveWinInd(cells, p);
+		}
+		if (tick === null) {
+			tick = this.randInd(cells);
+		}
+		cells[tick] = c;
+		this.setState({
+			cells: cells,
+			isPlayerNext: !this.state.isPlayerNext,
+		});
 	}
 
 	render(){
@@ -50,6 +141,12 @@ class App extends Component {
 				{phase === "setup" && <Setup onClick={(e) => this.handleSetupClick(e)} />}
 			</div>
 		);
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		if ((prevState.isPlayerNext || prevState.phase === "setup") && !this.state.isPlayerNext) {
+			this.computerMove();
+		};
 	}
 }
 
