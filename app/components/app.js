@@ -50,7 +50,7 @@ class App extends Component {
 	handleCellClick(i) {
 		// to do
 		const cells = this.state.cells.slice();
-		if (!this.state.isPlayerNext || cells[i]) return;
+		if (!this.state.isPlayerNext || cells[i] || this.state.phase !== "game") return;
 		cells[i] = this.state.player;
 		this.setState({
 			cells: cells,
@@ -78,6 +78,10 @@ class App extends Component {
 		return false;
 	}
 
+	checkIfDraw(cells) {
+		return cells.indexOf(null) === -1;
+	}
+
 	// check if game can be won in one move
 	// and return winning index
 	checkOneMoveWinInd(cells, sign) {
@@ -101,10 +105,6 @@ class App extends Component {
 	        if (el === null) emptyCells.push(i); 
 	    });
 	    return emptyCells[Math.floor(Math.random()*emptyCells.length)];
-	}
-
-	showMessage(msg) {
-		alert(msg);
 	}
 
 	computerMove() {
@@ -144,9 +144,45 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if ((prevState.isPlayerNext || prevState.phase === "setup") && !this.state.isPlayerNext) {
-			this.computerMove();
-		};
+		if (prevState.phase === "setup" && this.state.phase === "game" && !this.state.isPlayerNext) {
+			this.computerMove();	
+		}
+
+		const cells = this.state.cells;
+		const player = this.state.player;
+		const computer = this.state.computer;
+		let playerScore = this.state.score.player;
+		let computerScore = this.state.score.computer;
+		const сellsChanged = prevProps.cells === cells;
+
+        // to do
+        if (this.state.phase === "game") {
+			if (this.checkIfWin(cells)) {
+				console.log("Win!!!");
+				const winner = this.state.isPlayerNext ? computer : player;
+				if (winner === player) {
+					playerScore++;
+				} else {
+					computerScore++;
+				}
+				this.setState({
+					phase: "result",
+					score: {
+						player: playerScore,
+						computer: computerScore
+					}
+				});
+			} else if (this.checkIfDraw(cells)) {
+				this.setState({
+					phase: "result",
+				});
+				console.log("Draw");
+			} else {
+				if (prevState.isPlayerNext && !this.state.isPlayerNext) {
+					this.computerMove();
+				}
+			}
+        }
 	}
 }
 
