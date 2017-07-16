@@ -101,3 +101,10 @@ td:hover{
 .mb-2{
   margin-bottom: 2rem;
 }
+.result-msg{
+  font-size: 4rem;
+  margin-top: 0;
+  background-color: #66CC99;
+  color: white;
+  height: 6rem;
+}

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Game from "./game.js";
 import Setup from "./setup.js";
+import Result from "./result.js";
 
 class App extends Component {
 	constructor(props) {
@@ -17,6 +18,7 @@ class App extends Component {
 			},
 			cells: Array(9).fill(null),
 			isPlayerNext: false,
+			msg: ""
 		};
 	}
 
@@ -139,6 +141,7 @@ class App extends Component {
 				/>
 
 				{phase === "setup" && <Setup onClick={(e) => this.handleSetupClick(e)} />}
+				{phase === "result" && <Result msg={this.state.msg} />}
 			</div>
 		);
 	}
@@ -153,6 +156,7 @@ class App extends Component {
 		const computer = this.state.computer;
 		let playerScore = this.state.score.player;
 		let computerScore = this.state.score.computer;
+		let msg = "";
 		const сellsChanged = prevProps.cells === cells;
 
         // to do
@@ -162,19 +166,23 @@ class App extends Component {
 				const winner = this.state.isPlayerNext ? computer : player;
 				if (winner === player) {
 					playerScore++;
+					msg = "You won :)";
 				} else {
 					computerScore++;
+					msg = "You lost :(";
 				}
 				this.setState({
 					phase: "result",
 					score: {
 						player: playerScore,
 						computer: computerScore
-					}
+					},
+					msg: msg,
 				});
 			} else if (this.checkIfDraw(cells)) {
 				this.setState({
 					phase: "result",
+					msg: "It's a Draw",
 				});
 				console.log("Draw");
 			} else {
