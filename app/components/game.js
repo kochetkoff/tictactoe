@@ -10,7 +10,7 @@ function Game(props) {
 		gameClass = "blur";
 	}
 	return (
-		<div id="game" className={gameClass} >
+		<div className={gameClass} >
 			<Title onRefreshClick={props.onRefreshClick} />
 			<Board cells={props.cells} onCellClick={props.onCellClick} />
 			<Statusbar score={props.score} />

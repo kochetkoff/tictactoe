@@ -46,16 +46,16 @@ class App extends Component {
 			},
 			cells: Array(9).fill(null),
 			isPlayerNext: false,
+			msg: ""
 		});
 	}
 
 	handleCellClick(i) {
-		// to do
 		const cells = this.state.cells.slice();
 		if (!this.state.isPlayerNext || cells[i] || this.state.phase !== "game") return;
 		cells[i] = this.state.player;
 		this.setState({
-			cells: cells,
+			cells,
 			isPlayerNext: !this.state.isPlayerNext,
 		});
 	}
@@ -110,7 +110,6 @@ class App extends Component {
 	}
 
 	computerMove() {
-		//to do
 		let cells = this.state.cells.slice();
 		const c = this.state.computer;
 		const p = this.state.player;
@@ -147,10 +146,18 @@ class App extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
+        if (this.state.phase === "result" && prevState.phase === "game") {
+        	const newState = {
+				phase: "game",
+				cells: Array(9).fill(null),
+				isPlayerNext: this.state.player === "x",
+				msg: ""
+        	};
+        	setTimeout(() => this.setState(newState), 2000);
+        }
 		if (prevState.phase === "setup" && this.state.phase === "game" && !this.state.isPlayerNext) {
 			this.computerMove();	
 		}
-
 		const cells = this.state.cells;
 		const player = this.state.player;
 		const computer = this.state.computer;
@@ -158,11 +165,8 @@ class App extends Component {
 		let computerScore = this.state.score.computer;
 		let msg = "";
 		const сellsChanged = prevProps.cells === cells;
-
-        // to do
         if (this.state.phase === "game") {
 			if (this.checkIfWin(cells)) {
-				console.log("Win!!!");
 				const winner = this.state.isPlayerNext ? computer : player;
 				if (winner === player) {
 					playerScore++;
@@ -177,16 +181,15 @@ class App extends Component {
 						player: playerScore,
 						computer: computerScore
 					},
-					msg: msg,
+					msg,
 				});
 			} else if (this.checkIfDraw(cells)) {
 				this.setState({
 					phase: "result",
 					msg: "It's a Draw",
 				});
-				console.log("Draw");
 			} else {
-				if (prevState.isPlayerNext && !this.state.isPlayerNext) {
+				if (!this.state.isPlayerNext) {
 					this.computerMove();
 				}
 			}

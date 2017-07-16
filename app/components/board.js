@@ -14,7 +14,7 @@ class Board extends Component {
 
 	render(){
 		return (
-			<div id="board">
+			<div>
 				<table className="board center">
 					<tbody>
 						<tr>
